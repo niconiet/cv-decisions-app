@@ -1,0 +1,4 @@
+requests==2.9.1
+mod_wsgi==4.5
+jwt==0.3.2
+

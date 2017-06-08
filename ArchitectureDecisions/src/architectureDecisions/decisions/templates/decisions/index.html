@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="es">
+<head>
+    <!--<meta charset="UTF-8">
+    <title>Decisiones tomadas</title>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->
+
+    <title>Documentación de decisiones - Arquitectura</title>
+    <meta charset='utf-8'>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-theme.min.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-table.css' %}">
+        <link rel="shortcut icon" href="{% static 'favicon/favicon.png' %}"/>
+
+        <script type="text/javascript" src="{% static 'js/jquery-1.12.0.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/bootstrap.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/authenticator.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/jquery-ui.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/submitDecision.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/sorttable.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/bootstrap-table.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/locale/bootstrap-table-es-AR.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/jquery.mark.js' %}"></script>
+
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/index">Decisiones de Arquitectura</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="/index">Principal</a></li>
+            {% if user_authenticated %}
+              <li><a href="/decision">Documentar decisión</a></li>
+              <li><a href="/logout"">Cerrar sesión</a></li>
+            {% else %}
+              <li><a href="/login">Iniciar sesión</a></li>
+            {% endif %}
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+    <div><br></div>
+    <br/><br/>
+    <div class="container" style="width:90%">
+    {% if decisions_list %}
+        <table id="decisionsTable" data-show-columns="true" class="table table-striped table-bordered table-responsive table-condensed">
+            <thead>
+                <tr>
+                    <th style="vertical-align:middle">ID</th>
+                    <th style="vertical-align:middle">Proyecto</th>
+                    <th data-field="decisor" style="vertical-align:middle">Decisor</th>
+                    <th data-field="dominio" style="vertical-align:middle">Dominio</th>
+                    <th data-field="fechanotif" style="vertical-align:middle">Fecha de<br>notificación</th>
+                    <th data-field="fechaefect" style="vertical-align:middle">Fecha de<br>aplicación<br>efectiva</th>
+                    <th style="vertical-align:middle">Definición</th>
+                    <th data-field='racionales' style="vertical-align:middle">Racionales</th>
+                    <th data-field='alcance' style="vertical-align:middle">Alcance</th>
+                    <th data-field='impacto' style="vertical-align:middle">Impacto</th>
+                    <th data-field='alternativas' style="vertical-align:middle">Alternativas</th>
+                    <th data-field='dec-relacionadas' style="vertical-align:middle">Decisiones<br>relacionadas</th>
+                    <th style="vertical-align:middle">Estado</th>
+                    <th style="vertical-align:middle">Comentarios/<br>edición</th>
+                    <th style="vertical-align:middle">Detalle</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for decision in decisions_list %}
+                <tr>
+                    <td><center>{{ decision.id }}</center></td>
+                    <td>{{ decision.affected_project.name }}</td>
+                    <td>{{ decision.decisor.username }}</td>
+                    <td>{{ decision.domain }}</td>
+                    <td>{{ decision.notice_date }}</td>
+                    <td>{{ decision.effective_date|default:'' }}</td>
+                    <td>{{ decision.decision_details|linebreaksbr }}</td>
+                    <td>{{ decision.basis|linebreaksbr }}</td>
+                    <td>{{ decision.scope|linebreaksbr }}</td>
+                    <td>{{ decision.impact|linebreaksbr }}</td>
+                    <td>{{ decision.alternatives|linebreaksbr }}</td>
+                    <td>{{ decision.related_decision.id|default:'' }}</td>
+                    <td>{{ decision.decision_state }}</td>
+                    <td><center><button type="button" title="Ver comentarios" onclick="showComments('{{decision.id}}')" data-toggle="modal" data-target="#showCommentsModal" class="btn btn-default btn-md"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span> {{ decision.q_comments }}</button>
+                    {% if user_authenticated %}
+                        <button id="edit-decision" type="button" title="Editar decisión" onclick="edit_decision('{{decision.id}}')" class="btn btn-default btn-md"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span></button>
+                    {% endif %}
+                    </center></td>
+                    <td><center><button type="button" title="Ver detalles completos de la decisión" onclick="showFullDecision('{{decision.id}}')" data-toggle="modal" data-target="#showFullDecision" class="btn btn-default btn-md"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button></center></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        No hay decisiones tomadas aún
+    {% endif %}
+    </div>
+
+      <!-- Modal show comments -->
+      <div class="modal fade" id="showCommentsModal" role="dialog">
+        <div class="modal-dialog">
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Comentarios de la decisión</h4>
+            </div>
+            <div class="modal-body">
+                <div class="well well-sm" style="overflow:auto">
+                    <p id="commentsDecisions"></p><br>
+                </div>
+            </div>
+            <div class="modal-footer">
+              {% if user_authenticated %}
+                  <button data-dismiss="modal" type='button' title="Escribir comentario" style="float:left" data-toggle="modal" data-target="#writeCommentModal" class='btn btn-default'><span class='glyphicon glyphicon-pencil' aria-hidden='true'></span></button>
+              {% endif %}
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal write comment -->
+      <div class="modal fade" id="writeCommentModal" role="dialog">
+        <div class="modal-dialog">
+
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Escriba su comentario</h4>
+            </div>
+            <div class="modal-body">
+              <p>Usuario: {{ username }}</p>
+              <textarea id="decisionComment" rows="2" style="width:100%"></textarea>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" onclick="saveComment(document.getElementById('decisionComment').value)" data-dismiss="modal">Enviar</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Modal full decision -->
+      <div class="modal fade" id="showFullDecision" role="dialog">
+        <div class="modal-dialog">
+
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Detalles completos</h4>
+            </div>
+            <div class="modal-body">
+                <p id="pfulldetail"></p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    <script type="text/javascript">
+        localStorage.setItem('decision_for_edit',-1);
+        $('#decisionsTable').bootstrapTable({
+            pagination:true,
+            search:true,
+            locale:'es',
+            onSearch: function(term){
+                var $context = $("table tbody tr");
+                $context.show().unmark();
+                if (term) {
+                  $context.mark(term, {
+                    done: function() {
+                      $context.not(":has(mark)").hide();
+                    }
+                  });
+                }
+            }
+        });
+
+        $('#decisionsTable').bootstrapTable('hideColumn','racionales');
+        $('#decisionsTable').bootstrapTable('hideColumn','alcance');
+        $('#decisionsTable').bootstrapTable('hideColumn','alternativas');
+        $('#decisionsTable').bootstrapTable('hideColumn','dec-relacionadas');
+        $('#decisionsTable').bootstrapTable('hideColumn','decisor');
+        $('#decisionsTable').bootstrapTable('hideColumn','impacto');
+        $('#decisionsTable').bootstrapTable('hideColumn','dominio');
+        $('#decisionsTable').bootstrapTable('hideColumn','fechaefect');
+        $('#decisionsTable').bootstrapTable('hideColumn','fechanotif');
+
+        if('{{decision_for_modal}}' != '-1'){
+            $("#showFullDecision").modal();
+            showFullDecision('{{decision_for_modal}}');
+        }
+
+    </script>
+</body>
+</html>

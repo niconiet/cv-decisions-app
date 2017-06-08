@@ -1,12 +1,12 @@
-from .views import *
-from django.conf.urls import include, url
+from . import views
+from django.conf.urls import url
 
 urlpatterns = [
-    url(r'^index', render_index),
-    url(r'^decision', decision),
-    url(r'^writeComment/$', writeComment),
-    url(r'^getComments/$', getComments),
-    url(r'^getFullDecision/$', getFullDecision),
-    url(r'^projects$', projects),
-    url(r'^users$', users),
+    url(r'^index', views.render_index),
+    url(r'^decision', views.decision),
+    url(r'^writeComment/$', views.writeComment),
+    url(r'^getComments/$', views.getComments),
+    url(r'^getFullDecision/$', views.getFullDecision),
+    url(r'^projects$', views.projects),
+    url(r'^users$', views.users),
 ]

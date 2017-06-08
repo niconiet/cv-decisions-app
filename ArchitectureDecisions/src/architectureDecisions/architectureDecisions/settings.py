@@ -26,7 +26,7 @@ SECRET_KEY = '_-@0=f3^wd(euq5^%3i*=*j^o-ljqkheuk)3gcz6y^#0b2ve0g'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['sr-docker-xd02.corp.cablevision.com.ar','127.0.0.1','0.0.0.0', 'sisarqdec.corp.cablevision.com.ar']
+ALLOWED_HOSTS = ['sr-docker-xd02.corp.cablevision.com.ar', '127.0.0.1', '0.0.0.0', 'sisarqdec.corp.cablevision.com.ar']
 
 
 # Application definition
@@ -42,13 +42,14 @@ INSTALLED_APPS = [
     'decisions',
     'login',
     'mod_wsgi.server',
+    'reporting',
 ]
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    #'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -83,8 +84,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR + '/db/db.sqlite3'),
-        #'NAME': os.path.join(BASE_DIR + '/volume/db/db.sqlite3'),
-        #'NAME': os.path.join(BASE_DIR + '/db.sqlite3'),
+        # 'NAME': os.path.join(BASE_DIR + '/volume/db/db.sqlite3'),
+        # 'NAME': os.path.join(BASE_DIR + '/db.sqlite3'),
     }
 }
 
@@ -133,7 +134,7 @@ SECURE_SSL_REDIRECT = False
 if DEBUG:
     from .settings_dev import *
     DATABASES['default']['NAME'] = os.path.join(BASE_DIR + '/db.sqlite3')
-    INSTALLED_APPS.remove('mod_wsgi.server')
+    #INSTALLED_APPS.remove('mod_wsgi.server')
 else:
     from .settings_prod import *
     DATABASES['default']['NAME'] = '/volume/db/db.sqlite3'

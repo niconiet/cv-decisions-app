@@ -1,11 +1,10 @@
-from django.shortcuts import render
-from login.authenticator import authenticated
-from decisions.views import render_index
+from django.shortcuts import render,redirect
+from .authenticator import authenticated
+
 
 def render_login(request):
     """Render login"""
     if authenticated(request):
-        return render_index(request)
+        return redirect('/index')
     else:
         return render(request, 'login.html', {})
-

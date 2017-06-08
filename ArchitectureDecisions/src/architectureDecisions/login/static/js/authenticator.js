@@ -27,7 +27,7 @@ function authenticate(requestUser,requestPassword){
 }
 
 function logAsAnonimo(){
-	window.location.replace(window.location.protocol + "//" + window.location.hostname + ':' + window.location.port + homePage);
+	window.location.replace(homePage);
 }
 
 function showModal(){

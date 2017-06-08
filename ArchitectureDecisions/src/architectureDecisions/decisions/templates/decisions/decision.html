@@ -1,6 +1,4 @@
 <!DOCTYPE html>
-<html lang="es">
-<!DOCTYPE html>
 {% load staticfiles %}
 <html lang="es">
 <head>
@@ -12,6 +10,7 @@
         <link rel="stylesheet" type="text/css" href="{% static 'css/decision.css' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui.min.css' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'css/custom-style.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-multiple.css' %}">
         <link rel="shortcut icon" href="{% static 'favicon/favicon.png' %}"/>
 
         <script type="text/javascript" src="{% static 'js/jquery-1.12.0.min.js' %}"></script>
@@ -19,7 +18,7 @@
         <script type="text/javascript" src="{% static 'js/authenticator.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/jquery-ui.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/submitDecision.js' %}"></script>
-
+        <script type="text/javascript" src="{% static 'js/bootstrap-multiple.js' %}"></script>
 </head>
 
 <body>
@@ -38,17 +37,17 @@
           <ul class="nav navbar-nav">
             <li><a href="/index">Principal</a></li>
             <li class="active"><a href="/decision">Documentar decisión</a></li>
-              <li><a href="/logout"">Cerrar sesión </a></li>
+              <li><a href="/logout">Cerrar sesión </a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
     </nav>
     <br/><br/><br/>
     <div class="container" id="decisionFormContainer">
-          <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-            <input class="decision form-control" readonly value= {{ username }} name="Decisor" id="Decisor" placeholder="Decisor" type="text">
-          </div>
-          <div class="input-group form-group required"> <span class="input-group-addon control-label"><i class="glyphicon glyphicon-paperclip"></i></span>
+        <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+            <input class="decision form-control" readonly value= '{{ username }}' name="Decisor" id="Decisor" placeholder="Decisor" type="text">
+        </div>
+        <div class="input-group form-group required"> <span class="input-group-addon control-label"><i class="glyphicon glyphicon-paperclip"></i></span>
             <select class="decision form-control" id="Proyecto">
                 <option selected disabled value="">Seleccione proyecto</option>
                 {% for project in project_list %}
@@ -56,52 +55,52 @@
                 {% endfor %}
             </select>
         </div>
-          <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+        <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
             <input class="decision form-control" readonly name="Fecha_notificación" placeholder="Fecha de notificación" id="datepickerNotificacion" type="text" required>
           </div>
-          <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+        <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
             <input class="decision form-control" readonly name="Fecha_aplicacion_efectiva" placeholder="Fecha de aplicación efectiva" id="datepickerAplicacionEfectiva"  type="text">
           </div>
-          <div class="input-group form-group required"> <span class="input-group-addon control-label"><i class="glyphicon glyphicon-info-sign"></i></span>
+        <div class="input-group form-group required"> <span class="input-group-addon control-label"><i class="glyphicon glyphicon-info-sign"></i></span>
             <textarea class="decision form-control" placeholder="Definición" rows="3" id="Definicion" required>{{ decision.decision_details }}</textarea>
           </div>
-          <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-info-sign"></i></span>
+        <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-info-sign"></i></span>
             <textarea class="decision form-control" placeholder="Racionales" rows="3" id="Racionales">{{ decision.basis }}</textarea>
           </div>
-          <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-fullscreen"></i></span>
+        <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-fullscreen"></i></span>
               <textarea class="decision form-control" name="Alcance" id="Alcance" placeholder="Alcance" rows="3" required>{{ decision.scope }}</textarea>
           </div>
-          <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-screenshot"></i></span>
+        <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-screenshot"></i></span>
               <textarea class="decision form-control" name="Impacto" id="Impacto" rows="3" placeholder="Impacto" required>{{ decision.impact }}</textarea>
           </div>
-          <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-refresh"></i></span>
+        <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-refresh"></i></span>
               <textarea class="decision form-control" name="Alternativas" rows="3" placeholder="Alternativas" id="Alternativas">{{ decision.alternatives }}</textarea>
           </div>
-          <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-list-alt"></i></span>
-          <select class="decision form-control" id="Dominio">
-            <option selected disabled value="">Seleccione dominio</option>
-            <option value="DAT">Datos</option>
-            <option value="INT">Integraciones</option>
-            <option value="APP">Aplicaciones</option>
-            <option value="INF">Infraestructura</option>
-            <option value="SOL">Soluciones</option>
-          </select>
+        <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-list-alt"></i></span>
+              <select class="decision form-control" id="Dominio">
+                <option selected disabled value="">Seleccione dominio</option>
+                <option value="DAT">Datos</option>
+                <option value="INT">Integraciones</option>
+                <option value="APP">Aplicaciones</option>
+                <option value="INF">Infraestructura</option>
+                <option value="SOL">Soluciones</option>
+              </select>
           </div>
-          <div class="input-group form-group required"> <span class="input-group-addon control-label"><i class="glyphicon glyphicon-list-alt"></i></span>
-          <select class="decision form-control" id="Estado">
-              <option value="Tomada">Tomada</option>
-              <option value="Pendiente">Pendiente</option>
-          </select>
-          </div>
-        <button class="btn btn-info btn-sm btn-block" id="submitButton" onclick="submitDecision()" style="margin:0 auto; max-width:50%">Enviar</button>
-          </div>
-    </div>
-   </div>
-      <!-- Text input-->
-
+        <div class="input-group form-group required"><span class="input-group-addon control-label"><i class="glyphicon glyphicon-list-alt"></i></span>
+            <select class="decision form-control" id="Estado">
+                <option value="Tomada">Tomada</option>
+                <option value="Pendiente">Pendiente</option>
+            </select>
         </div>
-    </div>
-
+        <div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-list-alt"></i></span>
+            <select id="select-related" multiple="multiple" class="decision">
+                {% for decision in decisions_list %}
+                    <option value="{{ decision.id }}">{{decision.id}}- {{decision.decision_details|truncatewords:10}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button class="btn btn-info btn-sm btn-block" id="submitButton" onclick="submitDecision()" style="margin:0 auto; max-width:50%">Enviar</button>
+      </div>
 
     <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
@@ -114,8 +113,8 @@
             <p>Guardar decisión?</p>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" onclick="showCancelSubmitModal()" data-dismiss="modal">Cancel</button>
-            <button type="button" id="" class="btn btn-primary" onclick="postDecision()">Save changes</button>
+            <button type="button" class="btn btn-default" onclick="showCancelSubmitModal()" data-dismiss="modal">Cancelar</button>
+            <button type="button" id="" class="btn btn-primary" onclick="postDecision()">Guardar cambios</button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
@@ -190,6 +189,12 @@
     </div><!-- /.modal -->
 
     <script type="text/javascript">
+        $('#select-related').multipleSelect({
+            placeholder:'Decisiones relacionadas',
+            width: '100%',
+            filter: true,
+            selectAll: false
+        });
         document.getElementById('Proyecto').value = '{{ decision.affected_project_id }}';
         document.getElementById('Dominio').value = '{{ decision.domain }}';
         document.getElementById('datepickerNotificacion').value = '{{ decision.notice_date }}';
@@ -202,7 +207,9 @@
         if(!window.location.search){
             $("#datepickerAplicacionEfectiva").datepicker('option','minDate',0);
         }
-        document.getElementById('Estado').value = "{{ decision.decision_state|default:'Tomada' }}"
+        document.getElementById('Estado').value = "{{ decision.decision_state|default:'Tomada' }}";
+        var related_decisions = "{{ decision.related_decision_id }}".split(',');
+        $('#select-related').multipleSelect('setSelects', related_decisions)
     </script>
     </body>
 </html>

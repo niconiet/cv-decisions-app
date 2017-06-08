@@ -26,9 +26,3 @@
 
 * Remove untagged images
         docker rmi -f $(docker images | grep "<none>" | awk "{print $3}")
-
-* Pull from repository
-        docker pull sr-docker-xp01.corp.cablevision.com.ar:5000/cv-decisions-bot:latest
-
-* Push to repository
-        docker push sr-docker-xp01.corp.cablevision.com.ar:5000/cv-decisions-bot:latest

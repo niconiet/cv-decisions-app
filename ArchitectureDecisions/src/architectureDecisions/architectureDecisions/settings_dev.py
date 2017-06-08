@@ -17,4 +17,5 @@ port = "8080"
 protocol = "http"
 login_url = protocol + "://" + hostname + ':' + port + "/login"
 # -----------------------------
-
+log_path = "/volume/log/"
+LOG_FILENAME = log_path + "architecture-decisions.log"

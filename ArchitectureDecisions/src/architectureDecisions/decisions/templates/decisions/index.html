@@ -83,13 +83,16 @@
                     <td>{{ decision.decisor.username }}</td>
                     <td>{{ decision.domain }}</td>
                     <td>{{ decision.notice_date }}</td>
-                    <td>{{ decision.effective_date|default:'' }}</td>
-                    <td>{{ decision.decision_details|linebreaksbr }}</td>
-                    <td>{{ decision.basis|linebreaksbr }}</td>
-                    <td>{{ decision.scope|linebreaksbr }}</td>
-                    <td>{{ decision.impact|linebreaksbr }}</td>
-                    <td>{{ decision.alternatives|linebreaksbr }}</td>
-                    <td>{{ decision.related_decision.id|default:'' }}</td>
+                    <td>{{ decision.effective_date|default_if_none:'' }}</td>
+                    <td>{{ decision.decision_details|linebreaksbr|default_if_none:'' }}</td>
+                    <td>{{ decision.basis|default_if_none:''|linebreaksbr }}</td>
+                    <td>{{ decision.scope|linebreaksbr|default_if_none:'' }}</td>
+                    <td>{{ decision.impact|linebreaksbr|default_if_none:'' }}</td>
+                    <td>{{ decision.alternatives|linebreaksbr|default_if_none:'' }}</td>
+                    <td>{% for related in decision.related_decision_id %}
+                            <button type="button" title="Ver detalles completos de la decisión" onclick="showFullDecision('{{related}}')" data-toggle="modal" data-target="#showFullDecision" class="btn btn-default btn-md">{{ related }}</button>
+                        {% endfor %}
+                    </td>
                     <td>{{ decision.decision_state }}</td>
                     <td><center><button type="button" title="Ver comentarios" onclick="showComments('{{decision.id}}')" data-toggle="modal" data-target="#showCommentsModal" class="btn btn-default btn-md"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span> {{ decision.q_comments }}</button>
                     {% if user_authenticated %}
@@ -164,7 +167,7 @@
               <h4 class="modal-title">Detalles completos</h4>
             </div>
             <div class="modal-body">
-                <p id="pfulldetail"></p>
+                <p style="white-space: pre-line" id="pfulldetail"></p>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
@@ -176,7 +179,8 @@
 
     <script type="text/javascript">
         localStorage.setItem('decision_for_edit',-1);
-        $('#decisionsTable').bootstrapTable({
+        var $table = $('#decisionsTable');
+        $table.bootstrapTable({
             pagination:true,
             search:true,
             locale:'es',
@@ -193,15 +197,15 @@
             }
         });
 
-        $('#decisionsTable').bootstrapTable('hideColumn','racionales');
-        $('#decisionsTable').bootstrapTable('hideColumn','alcance');
-        $('#decisionsTable').bootstrapTable('hideColumn','alternativas');
-        $('#decisionsTable').bootstrapTable('hideColumn','dec-relacionadas');
-        $('#decisionsTable').bootstrapTable('hideColumn','decisor');
-        $('#decisionsTable').bootstrapTable('hideColumn','impacto');
-        $('#decisionsTable').bootstrapTable('hideColumn','dominio');
-        $('#decisionsTable').bootstrapTable('hideColumn','fechaefect');
-        $('#decisionsTable').bootstrapTable('hideColumn','fechanotif');
+        $table.bootstrapTable('hideColumn','racionales');
+        $table.bootstrapTable('hideColumn','alcance');
+        $table.bootstrapTable('hideColumn','alternativas');
+        $table.bootstrapTable('hideColumn','dec-relacionadas');
+        $table.bootstrapTable('hideColumn','decisor');
+        $table.bootstrapTable('hideColumn','impacto');
+        $table.bootstrapTable('hideColumn','dominio');
+        $table.bootstrapTable('hideColumn','fechaefect');
+        $table.bootstrapTable('hideColumn','fechanotif');
 
         if('{{decision_for_modal}}' != '-1'){
             $("#showFullDecision").modal();

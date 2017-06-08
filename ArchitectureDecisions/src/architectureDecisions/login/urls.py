@@ -1,10 +1,9 @@
-from login.views import *
+from . import views, authenticator
 from django.conf.urls import include, url
-from login.authenticator import *
 
 urlpatterns = [
-    url(r'^login$', render_login),
-    url(r'^logout$', logout),
-    url(r'^authenticate$', authenticate),
-    url(r'^authorization$', authorization),
+    url(r'^login$', views.render_login),
+    url(r'^logout$', authenticator.logout),
+    url(r'^authenticate$', authenticator.authenticate),
+    url(r'^authorization$', authenticator.authorization),
 ]

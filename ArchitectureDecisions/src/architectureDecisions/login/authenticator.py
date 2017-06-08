@@ -1,20 +1,19 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 import json
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import requests
+from django.conf import settings
 from architectureDecisions.settings import *
 import logging
 import logging.handlers
+import datetime
 
-if not DEBUG:
-    #Logging
-    log_path = "/volume/log"
-    LOG_FILENAME = log_path + "/" + "architecture-decisions.log"
-    logging.basicConfig(filename=LOG_FILENAME, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
-    handler = logging.handlers.TimedRotatingFileHandler(LOG_FILENAME, when="midnight", backupCount=7)
-    logger = logging.getLogger(__name__)
-    logger.addHandler(handler)
+
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
+handler = logging.handlers.TimedRotatingFileHandler(settings.LOG_FILENAME, 's', 6, 6)
+LOGGER = logging.getLogger(__name__)
+LOGGER.addHandler(handler)
 
 
 @csrf_exempt
@@ -29,9 +28,9 @@ def authenticate(request):
     json_response = json.loads(req.content.decode('utf-8'))
     if req.status_code == 200:
         set_session(json_response, body, request)
+        LOGGER.info(str(datetime.datetime.now()) + ' - Log in - ' + body['user'])
         return JsonResponse({"authenticated": True}, safe=False)
-    if not DEBUG:
-        logging.info("Authentication failed - " + "Status code: " + str(req.status_code) + " User: " + body["user"])
+    LOGGER.error(str(datetime.datetime.now()) + " - Authentication failed - " + "Status code: " + str(req.status_code) + " - User: " + body["user"])
     return JsonResponse({"authenticated": False}, safe=False)
 
 
@@ -62,7 +61,7 @@ def logout(request):
         revoke_session(access_token)
     except KeyError:
         pass
-    return render(request, 'login.html', {})
+    return redirect('/login')
 
 
 def revoke_session(access_token):

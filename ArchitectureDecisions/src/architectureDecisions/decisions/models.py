@@ -18,11 +18,13 @@ ARCHITECTURE_DOMAINS_CHOICES = (
 
 DECISION_STATES_CHOICES = (
     ('Tomada', 'Tomada'),
-    ('Pendiente','Pendiente')
+    ('Pendiente', 'Pendiente')
 )
 
 
 class Decision(models.Model):
+    def __str__(self):
+        return self.decision_details
     affected_project = models.ForeignKey(Project,
                             on_delete=models.CASCADE,
                             null=False,
@@ -59,16 +61,20 @@ class Decision(models.Model):
                             null=True,
                             blank=True,
                             help_text='Alternativas que fueron evaluadas para tomar la decision')
-    related_decision = models.ForeignKey("self",
+    #related_decision = models.ForeignKey("self",
+    related_decision_id = models.CharField(max_length=100,
                             null=True,
                             blank=True,
-                            help_text='Relacion con otra decision que influyo en la actual')
+                            help_text='Relacion con otras decisiones que influyeron en la actual')
     decision_state = models.CharField(max_length=15,
                             choices=DECISION_STATES_CHOICES,
                             default='Tomada',
                             help_text='Estado de la decision')
 
+
 class Comment(models.Model):
+    def __str__(self):
+        return self.comment
     affected_decision = models.ForeignKey(Decision,
                             null=False,
                             help_text='Decision afectada por el comentario')

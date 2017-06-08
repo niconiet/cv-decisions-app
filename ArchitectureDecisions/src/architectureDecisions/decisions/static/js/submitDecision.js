@@ -54,13 +54,14 @@ function newLine2br(value){
 }
 
 function postDecision(){
+    $('#submitButton').prop('disabled', true);
     var body_decision = {'affected_project_id':$('.decision')[1].value,
                'effective_date':$('.decision')[3].value, 'decision_details':$('.decision')[4].value,
                'basis':$('.decision')[5].value, 'scope':$('.decision')[6].value,
                'impact':$('.decision')[7].value, 'alternatives':$('.decision')[8].value,
                'domain':$('.decision')[9].value, 'decision_state':$('.decision')[10].value,
-               'decision_id':localStorage.getItem('decision_for_edit'),'bot':false};
-
+               'decision_id':localStorage.getItem('decision_for_edit'),'bot':false,
+               'related_decision_id':$('#select-related').multipleSelect('getSelects').join()};
     $.ajax({
         type: 'POST',
         contentType: 'application/json; charset=UTF-8',
